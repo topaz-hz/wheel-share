@@ -1,11 +1,17 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
-import NavigationForm from './MapAndNavigation/NavigationForm';
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import NavigationForm from './MapAndNavigation/NavigationForm';
+import MapWrapper from './MapAndNavigation/MapWrapper';
+
+const markersList = [
+  { id: 1, position: { lat: -33.89, lng: 151.274 } },
+  { id: 2, position: { lat: -33.8, lng: 151.274 } }
+];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function HomePage() {
+const HomePage = () => {
   const classes = useStyles();
 
   return (
@@ -59,11 +65,15 @@ export default function HomePage() {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper}>Put map component here</Paper>
+            <Paper className={classes.paper} style={{ height: 500 }}>
+              <MapWrapper markersList={markersList} />
+            </Paper>
           </Grid>
         </Grid>
         <div className={classes.footer}>Put footer component here</div>
       </Container>
     </>
   );
-}
+};
+
+export default HomePage;
