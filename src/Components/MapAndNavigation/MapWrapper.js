@@ -40,28 +40,29 @@ const MapWrapper = ({ markersList }) => {
   };
 
   return (
-    <Map
-      google={window.google}
-      zoom={14}
-      initialCenter={activeMarker?.position}
-      center={activeMarker?.position}
-      style={{
-        width: '1200px',
-        height: '468px',
-        position: 'relative'
-      }}>
-      {markersList.map((marker) => (
-        <Marker
-          key={marker.id}
-          position={marker.position}
-          onClick={() => onMarkerClick(marker)}
-          name={'Location 1'}
-          //TODO: different icons for severity of hazard or types of hazard?
-          // icon={markerTypes[marker.type]}
-        />
-      ))}
-      {/*{directions && <DirectionsRenderer directions={directions} />}*/}
-    </Map>
+    <div>Render Map Here - not rendering to save api calls</div>
+    // <Map
+    //   google={window.google}
+    //   zoom={14}
+    //   initialCenter={activeMarker?.position}
+    //   center={activeMarker?.position}
+    //   style={{
+    //     width: '1200px',
+    //     height: '468px',
+    //     position: 'relative'
+    //   }}>
+    //   {markersList.map((marker) => (
+    //     <Marker
+    //       key={marker.id}
+    //       position={marker.position}
+    //       onClick={() => onMarkerClick(marker)}
+    //       name={'Location 1'}
+    //       //TODO: different icons for severity of hazard or types of hazard?
+    //       // icon={markerTypes[marker.type]}
+    //     />
+    //   ))}
+    //   {/*{directions && <DirectionsRenderer directions={directions} />}*/}
+    // </Map>
   );
 };
 
