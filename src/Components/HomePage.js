@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
@@ -45,6 +45,19 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   // eslint-disable-next-line no-unused-vars
   const [directions, setDirections] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  const updateCurrentLocation = (callback = () => {}) => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const coords = pos.coords;
+      setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });
+    });
+    callback();
+  };
+
+  useEffect(() => {
+    updateCurrentLocation();
+  }, []);
 
   const classes = useStyles();
 
@@ -70,7 +83,16 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 500 }}>
-              <MapWrapper markersList={markersList} directions />
+              {currentLocation ? (
+                <MapWrapper
+                  markersList={markersList}
+                  directions={directions}
+                  currentLocation={currentLocation}
+                  updateCurrentLocation={updateCurrentLocation}
+                />
+              ) : (
+                <div>Loading...</div>
+              )}
             </Paper>
           </Grid>
         </Grid>
