@@ -83,16 +83,12 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 500 }}>
-              {currentLocation ? (
-                <MapWrapper
-                  markersList={markersList}
-                  directions={directions}
-                  currentLocation={currentLocation}
-                  updateCurrentLocation={updateCurrentLocation}
-                />
-              ) : (
-                <div>Loading...</div>
-              )}
+              <MapWrapper
+                markersList={markersList}
+                directions={directions}
+                currentLocation={currentLocation}
+                updateCurrentLocation={updateCurrentLocation}
+              />
             </Paper>
           </Grid>
         </Grid>

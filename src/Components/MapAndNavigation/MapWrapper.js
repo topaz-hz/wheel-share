@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLocation }) => {
   const [activeMarker, setActiveMarker] = useState(null);
-  // const [currentLocation, setCurrentLocation] = useState(null);
 
   const onMarkerClick = (marker) => {
     setActiveMarker(marker);
@@ -35,15 +34,14 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
           height: '410px',
           position: 'relative'
         }}>
-        {/*{currentLocation &*/}
-        {/*(*/}
-        <Marker
-          position={currentLocation}
-          onClick={() => onMarkerClick({ position: currentLocation })}
-          name={'My Location'}
-          icon={svgMarker}
-        />
-        {/*)}*/}
+        {currentLocation ? (
+          <Marker
+            position={currentLocation}
+            onClick={() => onMarkerClick({ position: currentLocation })}
+            name={'My Location'}
+            icon={svgMarker}
+          />
+        ) : null}
         {markersList.map((marker) => (
           <Marker
             key={marker.id}
