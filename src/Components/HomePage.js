@@ -9,9 +9,11 @@ import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
 
 const markersList = [
-  { id: 1, position: { lat: 32.07, lng: 34.777 } },
-  { id: 2, position: { lat: 32.08, lng: 34.775 } },
-  { id: 3, position: { lat: 32.075, lng: 34.774 } }
+  { id: 1, position: { lat: 32.07, lng: 34.777 }, type: 'step' },
+  { id: 2, position: { lat: 32.08, lng: 34.775 }, type: 'bikeBlocking' },
+  { id: 3, position: { lat: 32.075, lng: 34.774 }, type: 'carBlocking' },
+  { id: 4, position: { lat: 32.072, lng: 34.774 }, type: 'narrowSidewalk' },
+  { id: 5, position: { lat: 32.08, lng: 34.774 }, type: 'other' }
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -82,7 +84,7 @@ const HomePage = () => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper} style={{ height: 500 }}>
+            <Paper className={classes.paper} style={{ height: 600 }}>
               <MapWrapper
                 markersList={markersList}
                 directions={directions}
