@@ -48,6 +48,7 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
             icon={MapUtils.getSvgMarker(google, marker.type)}
           />
         ))}
+        {/*  TODO: make sure this is the correct way to render directions on map*/}
         {directions && <DirectionsRenderer directions={directions} />}
       </Map>
       <div>Put legend component here</div>
