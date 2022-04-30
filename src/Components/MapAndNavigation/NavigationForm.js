@@ -42,3 +42,5 @@ const NavigationForm = ({ setDirections }) => {
 NavigationForm.propTypes = {
   setDirections: PropTypes.func
 };
+
+export default NavigationForm;
