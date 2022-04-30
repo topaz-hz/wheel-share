@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,7 +12,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function NavigationForm() {
+// eslint-disable-next-line no-unused-vars
+const NavigationForm = ({ setDirections }) => {
+  //TODO: use setDirections as follows: if new directions to show on map is \
+  // 'directions_new' call function setDirections(directions_new) \
+  // directions prop will then be updated in mapWrapper component to render on map
   const classes = useStyles();
 
   return (
@@ -32,5 +37,10 @@ export default function NavigationForm() {
       </div>
     </div>
   );
-  // }
-}
+};
+
+NavigationForm.propTypes = {
+  setDirections: PropTypes.func
+};
+
+export default NavigationForm;
