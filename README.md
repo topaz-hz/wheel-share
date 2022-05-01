@@ -75,3 +75,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ### Hazard Types
 carBlocking, bikeBlocking, step, narrowSidewalk, other
+
+
+### a key for understanding the fields in the data base:
+note: this is flexible and can be change in case of front team needs.
+fields are:
+  1.*id* (generated automatically by the db anytime a new object is entered. user is not entering it. will ofcourse use you to identify the hazard and do things like updating and deleting it withought confusing with another).
+  2.*createdAt* (generated automatically by the db anytime a new object is entered. user is not entering it
+ 3. *Description* (equivalent to Hazard types which written above this paragraph (type:text))
+4.  *treated* (generated automatically by the db anytime a new object is entered. user is not entering it. though, can be changed to true and even back to false when front side wants to mark an hazard as treated. we expect text object says 'true' of 'false' , and we convert it to it's boolean (type in db is boolean,not text)
+ 5. *udpdatedAt* (anytime you change hazard status from treated to un treated or vise versa, this field saves the time stamp of change automatically, simmilar to *createdAt*. it meant to tract the changes and sort the db by relecancy when needed)
+6.  *coordinates* (the geo location shown in map.
+  this field will be created up to front request for the type you want to pass. we can also split it to x coordinate and y coordinate if needed)
+  7. *location* (a verbal and unmandatory description of the location. for example, "kaplan 10")
+  8. *info* *  (a verbal and unmandatory description of the location. for example, "a big tree, no way to pass from the side" or "right below the traffic light")
