@@ -1,12 +1,15 @@
 import React from 'react';
+import * as HazardUtils from '../Utils/hazardUtils';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
+} from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -14,17 +17,17 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(hazard, address, reporting_date) {
-  return { hazard, address, reporting_date };
+function createData(hazardType, location, updatedDate) {
+  return { hazardType, location, updatedDate };
 }
 
 const rows = [
-  createData('Hole in the sidewalk', 'Address', '6-5-2022'),
-  createData('Narrow street', 'Address', '6-5-2022'),
-  createData('Car blocks the street', 'Address', '6-5-2022'),
-  createData('Street close for infrastructure work', 'Address', '6-5-2022'),
-  createData('Curb is no accessible', 'Address', '6-5-2022'),
-  createData('Inaccessible Stairs', 'Address', '6-5-2022')
+  createData('Hole in the sidewalk', 'Address', '6.5.2022'),
+  createData('Narrow street', 'Address', '6.5.2022'),
+  createData('Car blocks the street', 'Address', '6.5.2022'),
+  createData('Street close for infrastructure work', 'Address', '6.5.2022'),
+  createData('Curb is no accessible', 'Address', '6.5.2022'),
+  createData('Inaccessible Stairs', 'Address', '6.5.2022')
 ];
 
 export default function BasicTable() {
@@ -35,19 +38,19 @@ export default function BasicTable() {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Hazard</TableCell>
-            <TableCell align="right">Address</TableCell>
-            <TableCell align="right">Reporting date</TableCell>
+            {HazardUtils.hazardListColumns.map((column, index) => (
+              <TableCell key={index}>{column}</TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.hazard}>
+            <TableRow key={row.hazardType}>
               <TableCell component="th" scope="row">
-                {row.hazard}
+                {row.hazardType}
               </TableCell>
-              <TableCell align="right">{row.address}</TableCell>
-              <TableCell align="right">{row.reporting_date}</TableCell>
+              <TableCell align="left">{row.location}</TableCell>
+              <TableCell align="left">{row.updatedDate}</TableCell>
             </TableRow>
           ))}
         </TableBody>

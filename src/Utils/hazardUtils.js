@@ -36,4 +36,6 @@ const markerURLs = {
     'https://www.svgrepo.com/show/382702/location-pin-navigation-destination-maps.svg'
 };
 
-export { hazardTypes, getSvgMarker, markerTypes, markerText, markerURLs };
+const hazardListColumns = ['Hazard Type', 'Location', 'Updated'];
+
+export { hazardListColumns, hazardTypes, getSvgMarker, markerTypes, markerText, markerURLs };

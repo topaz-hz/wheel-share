@@ -3,13 +3,10 @@ import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
 import HazardList from './HazardList';
 import HazardForm from './HazardForm';
+// import { hazards } from '../index';
 
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { Container, CssBaseline, Divider, Grid, Paper } from '@material-ui/core';
 
 const markersList = [
   { id: 1, position: { lat: 32.07, lng: 34.777 }, type: 'step' },
@@ -86,6 +83,7 @@ const HomePage = () => {
             <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
               <MapWrapper
                 markersList={markersList}
+                // markersList={hazards}
                 directions={directions}
                 currentLocation={currentLocation}
                 updateCurrentLocation={updateCurrentLocation}

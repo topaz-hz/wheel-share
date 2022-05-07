@@ -37,11 +37,14 @@ export const colRef = collection(db, 'hazards');
 //queries
 const qTimeOrder = query(colRef, orderBy('updatedAt', 'desc')); //ordering db snapshot by timestamp in console
 
+export let hazards = [];
+
 //real time collection data. sending a new snapshot every time there's a change in db
 onSnapshot(qTimeOrder, (snapshot) => {
-  let hazards = [];
+  let updatedHazards = [];
   snapshot.docs.forEach((doc) => {
-    hazards.push({ ...doc.data(), id: doc.id });
+    updatedHazards.push({ ...doc.data(), id: doc.id });
   });
-  console.log(hazards);
+  console.log(updatedHazards);
+  hazards = updatedHazards;
 });
