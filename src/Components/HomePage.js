@@ -27,20 +27,12 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Trebuchet MS, Helvetica, sans-serif'
   },
   grid: {
-    margin: '10px'
+    margin: '5px'
   },
   paper: {
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary
-  },
-  footer: {
-    position: 'fixed',
-    bottom: '0',
-    left: 0,
-    height: '50px',
-    width: '100%',
-    backgroundColor: 'lightblue'
   }
 }));
 
@@ -84,7 +76,7 @@ const HomePage = () => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper} style={{ height: 600 }}>
+            <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
               <MapWrapper
                 markersList={markersList}
                 directions={directions}
@@ -94,7 +86,6 @@ const HomePage = () => {
             </Paper>
           </Grid>
         </Grid>
-        <div className={classes.footer}>Put footer component here</div>
       </Container>
     </>
   );

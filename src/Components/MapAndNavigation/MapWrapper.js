@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { DirectionsRenderer } from 'react-google-maps';
 import PropTypes from 'prop-types';
 import * as MapUtils from './MapUtils';
+import MapLegend from './MapLegend';
 
 const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLocation }) => {
   const [activeMarker, setActiveMarker] = useState(null);
@@ -17,8 +18,9 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
     <>
       <Button
         variant="contained"
-        color="tertiary"
-        onClick={() => updateCurrentLocation(setActiveMarker(null))}>
+        color="default"
+        onClick={() => updateCurrentLocation(setActiveMarker(null))}
+        style={{ marginBottom: 10 }}>
         Find My Location
       </Button>
       <Map
@@ -27,8 +29,8 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
         initialCenter={currentLocation ? currentLocation : markersList[0]?.position}
         center={activeMarker ? activeMarker?.position : currentLocation}
         style={{
-          width: '1200px',
-          height: '410px',
+          width: 'calc(100% - 32px)',
+          height: '430px',
           position: 'relative'
         }}>
         {currentLocation ? (
@@ -51,7 +53,7 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
         {/*  TODO: make sure this is the correct way to render directions on map*/}
         {directions && <DirectionsRenderer directions={directions} />}
       </Map>
-      <div>Put legend component here</div>
+      <MapLegend />
     </>
   );
 };
