@@ -1,5 +1,6 @@
 import React from 'react';
 import * as HazardUtils from '../Utils/hazardUtils';
+import * as dbUtils from '../Utils/databaseUtils';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Table,
@@ -10,24 +11,38 @@ import {
   TableRow,
   Paper
 } from '@material-ui/core';
+import { Switch, Tooltip } from '@mui/material';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650
+    minWidth: 650,
+    fontFamily: 'Arial, Helvetica, sans-serif'
   }
 });
 
-function createData(hazardType, location, updatedDate) {
-  return { hazardType, location, updatedDate };
+function createData(hazardType, location, updatedDate, isTreated, moreInfo = null) {
+  return { hazardType, location, updatedDate, moreInfo, isTreated };
 }
 
 const rows = [
-  createData('Hole in the sidewalk', 'Address', '6.5.2022'),
-  createData('Narrow street', 'Address', '6.5.2022'),
-  createData('Car blocks the street', 'Address', '6.5.2022'),
-  createData('Street close for infrastructure work', 'Address', '6.5.2022'),
-  createData('Curb is no accessible', 'Address', '6.5.2022'),
-  createData('Inaccessible Stairs', 'Address', '6.5.2022')
+  createData('Hole in the sidewalk', 'Address', '6.5.2022', false),
+  createData('Car blocks the street', 'Address', '6.5.2022', false),
+  createData(
+    'Street close for infrastructure work',
+    'Address',
+    '6.5.2022',
+    false,
+    'More info text is here'
+  ),
+  createData(
+    'Narrow street',
+    'Address',
+    '6.5.2022',
+    true,
+    'There is plenty of info here because someone wrote a lot of text'
+  ),
+  createData('Curb is no accessible', 'Address', '6.5.2022', false),
+  createData('Inaccessible Stairs', 'Address', '6.5.2022', true)
 ];
 
 export default function BasicTable() {
@@ -39,7 +54,9 @@ export default function BasicTable() {
         <TableHead>
           <TableRow>
             {HazardUtils.hazardListColumns.map((column, index) => (
-              <TableCell key={index}>{column}</TableCell>
+              <TableCell key={index} align="center">
+                {column}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -50,7 +67,28 @@ export default function BasicTable() {
                 {row.hazardType}
               </TableCell>
               <TableCell align="left">{row.location}</TableCell>
-              <TableCell align="left">{row.updatedDate}</TableCell>
+              <TableCell align="center">{row.updatedDate}</TableCell>
+              <TableCell align="center">
+                <Switch
+                  checked={row.isTreated}
+                  onChange={() => dbUtils.updateHazard(!row.isTreated)}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              </TableCell>
+              {row.moreInfo ? (
+                <TableCell align="center">
+                  <Tooltip title={row.moreInfo}>
+                    <img
+                      src="https://www.svgrepo.com/show/24584/info-icon.svg"
+                      intrinsicsize="512 x 512"
+                      width="20"
+                      height="20"
+                    />
+                  </Tooltip>
+                </TableCell>
+              ) : (
+                <TableCell />
+              )}
             </TableRow>
           ))}
         </TableBody>

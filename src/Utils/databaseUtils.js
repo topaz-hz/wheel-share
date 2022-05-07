@@ -30,6 +30,22 @@ const deleteHazard = () => {};
 
 const updateHazard = (isTreated) => {
   window.console.log('isTreated', isTreated);
+  // const today = new Date();
+  // const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+  //
+  // const docRef = doc(db, 'hazards', isTreated);
+  // const isTrue = isTreated === 'true';
+  // updateDoc(docRef, {
+  //   treated: isTrue,
+  //   updatedAt: serverTimestamp(),
+  //   dateUpdated
+  // })
+  //   .then(() => {
+  //     alert('Data Successfully Updated');
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error updating document: ', error);
+  //   });
 };
 
 //delete a document (hazard) by id//
