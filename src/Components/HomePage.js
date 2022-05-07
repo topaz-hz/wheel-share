@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import NavigationForm from './MapAndNavigation/NavigationForm';
+import MapWrapper from './MapAndNavigation/MapWrapper';
+import HazardList from './HazardList';
+import HazardForm from './HazardForm';
+
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import NavigationForm from './MapAndNavigation/NavigationForm';
-import MapWrapper from './MapAndNavigation/MapWrapper';
 
 const markersList = [
   { id: 1, position: { lat: 32.07, lng: 34.777 }, type: 'step' },
@@ -27,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Trebuchet MS, Helvetica, sans-serif'
   },
   grid: {
-    margin: '10px'
+    margin: '10px',
+    alignItems: 'center'
   },
   paper: {
     padding: theme.spacing(2),
@@ -72,11 +76,15 @@ const HomePage = () => {
             <h1 style={{ color: 'darkblue', fontSize: '42px' }}>WheelShare</h1>
             <Divider variant="fullWidth" />
           </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>Put hazards list component here</Paper>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <HazardForm />
+            </Paper>
           </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>Put hazard form component here</Paper>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <HazardList />
+            </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
