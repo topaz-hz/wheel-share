@@ -15,7 +15,7 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
     updatedAt: timestamp,
     dateUpdated,
     location,
-    // coordinates: coordinates,
+    coordinates: coordinates,
     info: moreInfo
   })
     .then(() => {

@@ -40,6 +40,10 @@ const HomePage = () => {
   // eslint-disable-next-line no-unused-vars
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [startAddress, setStartAddress] = React.useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [endAddress, setEndAddress] = React.useState('');
 
   const updateCurrentLocation = (callback = () => {}) => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -52,6 +56,26 @@ const HomePage = () => {
   useEffect(() => {
     updateCurrentLocation();
   }, []);
+
+  const searchDirections = () => {
+    console.log(startAddress);
+    console.log(endAddress);
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin: new window.google.maps.LatLng(startAddress),
+        destination: new window.google.maps.LatLng(endAddress),
+        travelMode: window.google.maps.TravelMode.DRIVING
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          setDirections(result);
+        } else {
+          console.warn(`error fetching directions ${status}`);
+        }
+      }
+    );
+  };
 
   const classes = useStyles();
 
@@ -76,7 +100,11 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <NavigationForm />
+              <NavigationForm
+                setStartAddress={setStartAddress}
+                setEndAddress={setEndAddress}
+                searchDirections={searchDirections}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12}>

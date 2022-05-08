@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+// import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker } from 'google-maps-react';
 import Button from '@material-ui/core/Button';
 import { DirectionsRenderer } from 'react-google-maps';
 import PropTypes from 'prop-types';
@@ -52,6 +53,7 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
         ))}
         {/*  TODO: make sure this is the correct way to render directions on map*/}
         {directions && <DirectionsRenderer directions={directions} />}
+        {console.log(directions)}
       </Map>
       <MapLegend />
     </>
@@ -65,6 +67,7 @@ MapWrapper.propTypes = {
   updateCurrentLocation: PropTypes.func
 };
 
-export default GoogleApiWrapper({
-  apiKey: 'GOOGLE_API_KEY'
-})(MapWrapper);
+export default MapWrapper;
+// export default GoogleApiWrapper({
+//   apiKey: 'GOOGLE_API_KEY'
+// })(MapWrapper);
