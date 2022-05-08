@@ -9,12 +9,12 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
   const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 
   addDoc(colRef, {
-    Description: hazardType,
+    hazardType: hazardType,
     treated: false,
     createdAt: timestamp,
     updatedAt: timestamp,
-    dateUpdated,
-    location,
+    dateUpdated: dateUpdated,
+    location: location,
     coordinates: coordinates,
     info: moreInfo
   })
@@ -26,51 +26,41 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
     });
 };
 
-const deleteHazard = () => {};
 
 const updateHazard = (isTreated) => {
   window.console.log('isTreated', isTreated);
-  // const today = new Date();
-  // const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
-  //
-  // const docRef = doc(db, 'hazards', isTreated);
-  // const isTrue = isTreated === 'true';
-  // updateDoc(docRef, {
-  //   treated: isTrue,
-  //   updatedAt: serverTimestamp(),
-  //   dateUpdated
-  // })
-  //   .then(() => {
-  //     alert('Data Successfully Updated');
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error updating document: ', error);
-  //   });
+  
+  const today = new Date();
+  const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+  
+  const docRef = doc(db, 'hazards', isTreated);
+  const isTrue = isTreated === 'true';
+  
+  updateDoc(docRef, {
+    treated: isTrue,
+    updatedAt: serverTimestamp(),
+    dateUpdated
+  })
+    .then(() => {
+      alert('Data Successfully Updated');
+    })
+    .catch((error) => {
+      console.error('Error updating document: ', error);
+    });
 };
 
-//delete a document (hazard) by id//
-// const deleteHazardForm = document.querySelector('.delete');
-// deleteHazardForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const docRef = doc(db, 'hazards', deleteHazardForm.id.value);
-//   deleteDoc(docRef).then(() => {
-//     deleteHazardForm.reset();
-//   });
-// });
 
-//edit
-// const updateForm = document.querySelector('.update');
-// updateForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//
-//   const docRef = doc(db, 'hazards', updateForm.id.value);
-//   var isTrue = updateForm.treated.value === 'true';
-//   updateDoc(docRef, {
-//     treated: isTrue,
-//     updatedAt: serverTimestamp()
-//   }).then(() => {
-//     updateForm.reset();
-//   });
-// });
+const deleteHazard = (hazard) => {
+  docRef = doc(db, 'hazards', hazard);
+  deleteDoc(docRef).then(() => {
+    deleteHazardForm.reset()});
+};
 
-export { addHazard, deleteHazard, updateHazard };
+//queries
+// top 10 hazards filtered by updatedAt coloumn
+const getHazards = () => {
+  const colRef = collection(db,'hazards')
+  return query(colRef, orderBy('updatedAt', 'desc'), limit(10));
+}
+
+export { addHazard, deleteHazard, updateHazard, getHazards };
