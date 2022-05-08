@@ -15,6 +15,8 @@ const markerTypes = [
   'currentLocation'
 ];
 
+const hazardTypes = ['carBlocking', 'bikeBlocking', 'step', 'narrowSidewalk', 'other'];
+
 const markerText = {
   carBlocking: 'Car Blocking',
   bikeBlocking: 'Bike Blocking',
@@ -34,4 +36,6 @@ const markerURLs = {
     'https://www.svgrepo.com/show/382702/location-pin-navigation-destination-maps.svg'
 };
 
-export { getSvgMarker, markerTypes, markerText, markerURLs };
+const hazardListColumns = ['Hazard Type', 'Location', 'Updated', 'Treated?', 'More Info'];
+
+export { hazardListColumns, hazardTypes, getSvgMarker, markerTypes, markerText, markerURLs };

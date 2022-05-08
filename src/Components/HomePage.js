@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
+import HazardList from './HazardList';
+import HazardForm from './HazardForm';
+// import { hazards } from '../index';
+
+import { makeStyles } from '@material-ui/core/styles';
+import { Container, CssBaseline, Divider, Grid, Paper } from '@material-ui/core';
 
 const markersList = [
   { id: 1, position: { lat: 32.07, lng: 34.777 }, type: 'step' },
@@ -40,6 +40,10 @@ const HomePage = () => {
   // eslint-disable-next-line no-unused-vars
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [startAddress, setStartAddress] = React.useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [endAddress, setEndAddress] = React.useState('');
 
   const updateCurrentLocation = (callback = () => {}) => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -53,6 +57,26 @@ const HomePage = () => {
     updateCurrentLocation();
   }, []);
 
+  const searchDirections = () => {
+    console.log(startAddress);
+    console.log(endAddress);
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin: new window.google.maps.LatLng(startAddress),
+        destination: new window.google.maps.LatLng(endAddress),
+        travelMode: window.google.maps.TravelMode.DRIVING
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          setDirections(result);
+        } else {
+          console.warn(`error fetching directions ${status}`);
+        }
+      }
+    );
+  };
+
   const classes = useStyles();
 
   return (
@@ -64,21 +88,30 @@ const HomePage = () => {
             <h1 style={{ color: 'darkblue', fontSize: '42px' }}>WheelShare</h1>
             <Divider variant="fullWidth" />
           </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>Put hazards list component here</Paper>
-          </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>Put hazard form component here</Paper>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <HazardForm />
+            </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <NavigationForm />
+              <HazardList />
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <NavigationForm
+                setStartAddress={setStartAddress}
+                setEndAddress={setEndAddress}
+                searchDirections={searchDirections}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
               <MapWrapper
                 markersList={markersList}
+                // markersList={hazards}
                 directions={directions}
                 currentLocation={currentLocation}
                 updateCurrentLocation={updateCurrentLocation}

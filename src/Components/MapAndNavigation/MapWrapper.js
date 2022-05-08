@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+// import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker } from 'google-maps-react';
 import Button from '@material-ui/core/Button';
 import { DirectionsRenderer } from 'react-google-maps';
 import PropTypes from 'prop-types';
-import * as MapUtils from './MapUtils';
+import * as HazardUtils from '../../Utils/hazardUtils';
 import MapLegend from './MapLegend';
 
 const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLocation }) => {
@@ -38,7 +39,7 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
             position={currentLocation}
             onClick={() => onMarkerClick({ position: currentLocation })}
             name={'My Location'}
-            icon={MapUtils.getSvgMarker(google, 'currentLocation')}
+            icon={HazardUtils.getSvgMarker(google, 'currentLocation')}
           />
         ) : null}
         {markersList.map((marker) => (
@@ -47,11 +48,12 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
             position={marker.position}
             onClick={() => onMarkerClick(marker)}
             name={'Location 1'}
-            icon={MapUtils.getSvgMarker(google, marker.type)}
+            icon={HazardUtils.getSvgMarker(google, marker.type)}
           />
         ))}
         {/*  TODO: make sure this is the correct way to render directions on map*/}
         {directions && <DirectionsRenderer directions={directions} />}
+        {console.log(directions)}
       </Map>
       <MapLegend />
     </>
@@ -65,6 +67,7 @@ MapWrapper.propTypes = {
   updateCurrentLocation: PropTypes.func
 };
 
-export default GoogleApiWrapper({
-  apiKey: 'GOOGLE_API_KEY'
-})(MapWrapper);
+export default MapWrapper;
+// export default GoogleApiWrapper({
+//   apiKey: 'GOOGLE_API_KEY'
+// })(MapWrapper);
