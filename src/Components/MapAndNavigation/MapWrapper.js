@@ -48,7 +48,7 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
             position={marker.position}
             onClick={() => onMarkerClick(marker)}
             name={'Location 1'}
-            icon={HazardUtils.getSvgMarker(google, marker.type)}
+            icon={HazardUtils.getSvgMarker(google, marker.hazardType)}
           />
         ))}
         {/*  TODO: make sure this is the correct way to render directions on map*/}
@@ -69,5 +69,5 @@ MapWrapper.propTypes = {
 
 export default MapWrapper;
 // export default GoogleApiWrapper({
-//   apiKey: 'GOOGLE_API_KEY'
+//   apiKey: 'apikey'
 // })(MapWrapper);
