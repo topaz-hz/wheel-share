@@ -1,81 +1,73 @@
-// import { db, colRef } from './index';
-// import { addDoc, collection, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-// import { colRef } from '../index';
-// import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, colRef } from '../index';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc
+} from 'firebase/firestore';
 
 const addHazard = (hazardType, location, coordinates, moreInfo) => {
-  // const timestamp = serverTimestamp();
+  const timestamp = serverTimestamp();
   const today = new Date();
   const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 
-  window.console.log('hazardType', hazardType);
-  window.console.log('dateUpdated', dateUpdated);
-  window.console.log('location', location);
-  window.console.log('coordinates', coordinates);
-  window.console.log('info', moreInfo);
-  // addDoc(colRef, {
-  //   Description: hazardType,
-  //   treated: false,
-  //   createdAt: timestamp,
-  //   updatedAt: timestamp,
-  //   dateUpdated,
-  //   location,
-  //   coordinates: coordinates,
-  //   info: moreInfo
-  // })
-  //   .then(() => {
-  //     alert('Data Successfully Submitted');
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error adding document: ', error);
-  //   });
+  addDoc(colRef, {
+    hazardType: hazardType,
+    treated: false,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+    dateUpdated: dateUpdated,
+    location: location,
+    coordinates: coordinates,
+    info: moreInfo
+  })
+    .then(() => {
+      alert('Data Successfully Submitted');
+    })
+    .catch((error) => {
+      console.error('Error adding document: ', error);
+    });
 };
 
-const deleteHazard = () => {};
-
-const updateHazard = (isTreated) => {
+const updateHazard = (hazard, isTreated) => {
   window.console.log('isTreated', isTreated);
-  // const today = new Date();
-  // const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
-  //
-  // const docRef = doc(db, 'hazards', isTreated);
-  // const isTrue = isTreated === 'true';
-  // updateDoc(docRef, {
-  //   treated: isTrue,
-  //   updatedAt: serverTimestamp(),
-  //   dateUpdated
-  // })
-  //   .then(() => {
-  //     alert('Data Successfully Updated');
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error updating document: ', error);
-  //   });
+
+  const today = new Date();
+  const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+
+  const docRef = doc(db, 'hazards', hazard.id);
+  const isTrue = isTreated === 'true';
+
+  updateDoc(docRef, {
+    treated: isTrue,
+    updatedAt: serverTimestamp(),
+    dateUpdated
+  })
+    .then(() => {
+      alert('Data Successfully Updated');
+    })
+    .catch((error) => {
+      console.error('Error updating document: ', error);
+    });
 };
 
-//delete a document (hazard) by id//
-// const deleteHazardForm = document.querySelector('.delete');
-// deleteHazardForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const docRef = doc(db, 'hazards', deleteHazardForm.id.value);
-//   deleteDoc(docRef).then(() => {
-//     deleteHazardForm.reset();
-//   });
-// });
+const deleteHazard = (hazard) => {
+  const docRef = doc(db, 'hazards', hazard.id);
+  deleteDoc(docRef).then(() => {
+    // deleteHazardForm.reset();
+  });
+};
 
-//edit
-// const updateForm = document.querySelector('.update');
-// updateForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//
-//   const docRef = doc(db, 'hazards', updateForm.id.value);
-//   var isTrue = updateForm.treated.value === 'true';
-//   updateDoc(docRef, {
-//     treated: isTrue,
-//     updatedAt: serverTimestamp()
-//   }).then(() => {
-//     updateForm.reset();
-//   });
-// });
+//queries
+// top 20 hazards filtered by updatedAt column
+const getHazards = () => {
+  const colRef = collection(db, 'hazards');
+  return query(colRef, orderBy('updatedAt', 'desc'), limit(20));
+};
 
-export { addHazard, deleteHazard, updateHazard };
+export { addHazard, deleteHazard, updateHazard, getHazards };
