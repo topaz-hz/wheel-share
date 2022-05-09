@@ -35,16 +35,13 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
 };
 
 const updateHazard = (hazard, isTreated) => {
-  window.console.log('isTreated', isTreated);
-
   const today = new Date();
   const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
 
   const docRef = doc(db, 'hazards', hazard.id);
-  const isTrue = isTreated === 'true';
 
   updateDoc(docRef, {
-    treated: isTrue,
+    treated: isTreated,
     updatedAt: serverTimestamp(),
     dateUpdated
   })

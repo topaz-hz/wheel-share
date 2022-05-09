@@ -44,11 +44,6 @@ export default function FormDialog() {
     return hazardType && coordinates;
   };
 
-  const setAddress = (coordinates, location) => {
-    setLocation(location);
-    setCoordinates(coordinates);
-  };
-
   // const handleLocationChange = (geolocation, address) => {
   //   setCoordinates(geolocation);
   //   setLocation(address);
@@ -98,7 +93,7 @@ export default function FormDialog() {
             Address
           </InputLabel>
           {/*//TODO: use geolocation autocomplete for address field & setCoordinates in onChange function*/}
-          <PlacesAutocomplete setAddress={setAddress} label={''} />
+          <PlacesAutocomplete setGeolocation={setCoordinates} setAddress={setLocation} label={''} />
           <InputLabel
             variant="standard"
             htmlFor="uncontrolled-native"

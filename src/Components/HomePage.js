@@ -3,10 +3,11 @@ import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
 import HazardList from './HazardList';
 import HazardForm from './HazardForm';
-import { hazards } from '../index';
+import { qTimeOrder, db } from '../index';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, CssBaseline, Divider, Grid, Paper } from '@material-ui/core';
+import { onSnapshot } from 'firebase/firestore';
 
 // const hazards = [
 //   {
@@ -72,12 +73,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HomePage = () => {
+  const [hazards, setHazards] = useState(null);
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [startAddress, setStartAddress] = React.useState('');
   const [endAddress, setEndAddress] = React.useState('');
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(qTimeOrder, (snapshot) => {
+      let updatedHazards = [];
+      snapshot.docs.forEach((doc) => {
+        updatedHazards.push({ ...doc.data(), id: doc.id });
+      });
+      console.log(updatedHazards);
+      setHazards(updatedHazards);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [db]);
+
   const updateCurrentLocation = (callback = () => {}) => {
+    window.console.log(hazards);
     navigator.geolocation.getCurrentPosition((pos) => {
       const coords = pos.coords;
       setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });
@@ -127,7 +144,7 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <HazardList hazardsList={hazards} />
+              {hazards && <HazardList hazardsList={hazards} />}
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -141,13 +158,14 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
-              <MapWrapper
-                // markersList={markersList}
-                markersList={hazards}
-                directions={directions}
-                currentLocation={currentLocation}
-                updateCurrentLocation={updateCurrentLocation}
-              />
+              {hazards && (
+                <MapWrapper
+                  markersList={hazards}
+                  directions={directions}
+                  currentLocation={currentLocation}
+                  updateCurrentLocation={updateCurrentLocation}
+                />
+              )}
             </Paper>
           </Grid>
         </Grid>

@@ -45,12 +45,14 @@ const NavigationForm = ({
             }}>
             <div style={{ width: 600 }}>
               <PlacesAutocomplete
-                setAddress={setStartAddress}
+                setGeolocation={setStartAddress}
+                setAddress={() => {}}
                 label={'From'}
                 customStyle={{ id: 'outlined-basic', variant: 'outlined' }}
               />
               <PlacesAutocomplete
-                setAddress={setEndAddress}
+                setGeolocation={setEndAddress}
+                setAddress={() => {}}
                 label={'To'}
                 customStyle={{ id: 'outlined-basic', variant: 'outlined' }}
               />
