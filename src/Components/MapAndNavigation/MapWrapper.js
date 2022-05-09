@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 import { Map, Marker } from 'google-maps-react';
 import Button from '@material-ui/core/Button';
@@ -10,6 +10,10 @@ import MapLegend from './MapLegend';
 const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLocation }) => {
   const [activeMarker, setActiveMarker] = useState(null);
   const google = window.google;
+
+  useEffect(() => {
+    window.console.log('reloaded mapWrapper');
+  }, []);
 
   const onMarkerClick = (marker) => {
     setActiveMarker(marker);
@@ -42,13 +46,14 @@ const MapWrapper = ({ markersList, directions, currentLocation, updateCurrentLoc
             icon={HazardUtils.getSvgMarker(google, 'currentLocation')}
           />
         ) : null}
+        {/*  TODO: fix markers with geolocation - doesn't show well*/}
         {markersList.map((marker) => (
           <Marker
             key={marker.id}
             position={marker.position}
             onClick={() => onMarkerClick(marker)}
             name={'Location 1'}
-            icon={HazardUtils.getSvgMarker(google, marker.type)}
+            icon={HazardUtils.getSvgMarker(google, marker.hazardType)}
           />
         ))}
         {/*  TODO: make sure this is the correct way to render directions on map*/}
@@ -69,5 +74,5 @@ MapWrapper.propTypes = {
 
 export default MapWrapper;
 // export default GoogleApiWrapper({
-//   apiKey: 'GOOGLE_API_KEY'
+//   apiKey: 'apikey'
 // })(MapWrapper);

@@ -4,7 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, onSnapshot, query, orderBy, collection } from 'firebase/firestore';
+// import { getFirestore, query, orderBy, collection } from 'firebase/firestore';
+import { getFirestore, query, orderBy, collection } from 'firebase/firestore';
+// import { getFirestore, onSnapshot, query, orderBy, collection } from 'firebase/firestore';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -35,16 +37,4 @@ export const db = getFirestore();
 export const colRef = collection(db, 'hazards');
 
 //queries
-const qTimeOrder = query(colRef, orderBy('updatedAt', 'desc')); //ordering db snapshot by timestamp in console
-
-export let hazards = [];
-
-//real time collection data. sending a new snapshot every time there's a change in db
-onSnapshot(qTimeOrder, (snapshot) => {
-  let updatedHazards = [];
-  snapshot.docs.forEach((doc) => {
-    updatedHazards.push({ ...doc.data(), id: doc.id });
-  });
-  console.log(updatedHazards);
-  hazards = updatedHazards;
-});
+export const qTimeOrder = query(colRef, orderBy('updatedAt', 'desc')); //ordering db snapshot by timestamp in console

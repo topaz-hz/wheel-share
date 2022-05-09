@@ -12,6 +12,7 @@ import {
   Paper
 } from '@material-ui/core';
 import { Switch, Tooltip } from '@mui/material';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   table: {
@@ -20,33 +21,9 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(hazardType, location, updatedDate, isTreated, moreInfo = null) {
-  return { hazardType, location, updatedDate, moreInfo, isTreated };
-}
-
-const rows = [
-  createData('Hole in the sidewalk', 'Address', '6.5.2022', false),
-  createData('Car blocks the street', 'Address', '6.5.2022', false),
-  createData(
-    'Street close for infrastructure work',
-    'Address',
-    '6.5.2022',
-    false,
-    'More info text is here'
-  ),
-  createData(
-    'Narrow street',
-    'Address',
-    '6.5.2022',
-    true,
-    'There is plenty of info here because someone wrote a lot of text'
-  ),
-  createData('Curb is no accessible', 'Address', '6.5.2022', false),
-  createData('Inaccessible Stairs', 'Address', '6.5.2022', true)
-];
-
-export default function BasicTable() {
+const HazardList = ({ hazardsList }) => {
   const classes = useStyles();
+  const rows = hazardsList;
 
   return (
     <TableContainer component={Paper}>
@@ -64,20 +41,23 @@ export default function BasicTable() {
           {rows.map((row) => (
             <TableRow key={row.hazardType}>
               <TableCell component="th" scope="row">
-                {row.hazardType}
+                {HazardUtils.markerText[row.hazardType]}
               </TableCell>
               <TableCell align="left">{row.location}</TableCell>
-              <TableCell align="center">{row.updatedDate}</TableCell>
+              <TableCell align="center">{row.dateUpdated}</TableCell>
               <TableCell align="center">
                 <Switch
-                  checked={row.isTreated}
-                  onChange={() => dbUtils.updateHazard(!row.isTreated)}
+                  checked={row.treated}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    dbUtils.updateHazard(row, !row.treated);
+                  }}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               </TableCell>
-              {row.moreInfo ? (
+              {row.info ? (
                 <TableCell align="center">
-                  <Tooltip title={row.moreInfo}>
+                  <Tooltip title={row.info}>
                     <img
                       src="https://www.svgrepo.com/show/24584/info-icon.svg"
                       intrinsicsize="512 x 512"
@@ -95,4 +75,9 @@ export default function BasicTable() {
       </Table>
     </TableContainer>
   );
-}
+};
+
+HazardList.propTypes = {
+  hazardsList: PropTypes.arrayOf(PropTypes.any)
+};
+export default HazardList;

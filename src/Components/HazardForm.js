@@ -12,11 +12,11 @@ import {
   TextField
 } from '@material-ui/core';
 import { InputLabel, NativeSelect } from '@mui/material';
+import PlacesAutocomplete from './MapAndNavigation/LocationSearchInput.js';
 
 export default function FormDialog() {
   const [hazardType, setHazardType] = useState(null);
   const [location, setLocation] = useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [coordinates, setCoordinates] = useState(null);
   const [moreInfo, setMoreInfo] = useState(null);
 
@@ -29,19 +29,25 @@ export default function FormDialog() {
   const closeDialog = () => {
     setHazardType(null);
     setLocation(null);
-    // setCoordinates(null);
+    setCoordinates(null);
     setMoreInfo(null);
     setOpen(false);
   };
 
-  const handleSubmitHazard = () => {
+  const handleSubmitHazard = (e) => {
+    e.preventDefault();
     dbUtils.addHazard(hazardType, location, coordinates, moreInfo);
     closeDialog();
   };
 
   const shouldEnableSubmit = () => {
-    return hazardType && location;
+    return hazardType && coordinates;
   };
+
+  // const handleLocationChange = (geolocation, address) => {
+  //   setCoordinates(geolocation);
+  //   setLocation(address);
+  // }
 
   return (
     <div>
@@ -87,14 +93,7 @@ export default function FormDialog() {
             Address
           </InputLabel>
           {/*//TODO: use geolocation autocomplete for address field & setCoordinates in onChange function*/}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="address"
-            type="address"
-            fullWidth
-            onChange={(event) => setLocation(event.target.value)}
-          />
+          <PlacesAutocomplete setGeolocation={setCoordinates} setAddress={setLocation} label={''} />
           <InputLabel
             variant="standard"
             htmlFor="uncontrolled-native"

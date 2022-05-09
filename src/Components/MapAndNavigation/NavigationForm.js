@@ -39,19 +39,33 @@ const NavigationForm = ({
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'center',
-              alignItems: 'baseline'
+              alignItems: 'baseline',
+              margin: 'auto',
+              verticalAlign: 'middle'
             }}>
-            <PlacesAutocomplete setAddress={setStartAddress}></PlacesAutocomplete>
-            <PlacesAutocomplete setAddress={setEndAddress}></PlacesAutocomplete>
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              onClick={searchDirections}
-              style={{ marginLeft: '10px' }}>
-              Go!
-            </Button>
+            <div style={{ width: 600 }}>
+              <PlacesAutocomplete
+                setGeolocation={setStartAddress}
+                setAddress={() => {}}
+                label={'From'}
+                customStyle={{ id: 'outlined-basic', variant: 'outlined' }}
+              />
+              <PlacesAutocomplete
+                setGeolocation={setEndAddress}
+                setAddress={() => {}}
+                label={'To'}
+                customStyle={{ id: 'outlined-basic', variant: 'outlined' }}
+              />
+            </div>
           </div>
+          <Button
+            variant="contained"
+            color="primary"
+            component="span"
+            onClick={searchDirections}
+            style={{ margin: '30px 0', width: 300 }}>
+            Go!
+          </Button>
         </label>
       </div>
     </div>

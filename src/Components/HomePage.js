@@ -3,18 +3,54 @@ import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
 import HazardList from './HazardList';
 import HazardForm from './HazardForm';
-// import { hazards } from '../index';
+import { qTimeOrder, db } from '../index';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, CssBaseline, Divider, Grid, Paper } from '@material-ui/core';
+import { onSnapshot } from 'firebase/firestore';
 
-const markersList = [
-  { id: 1, position: { lat: 32.07, lng: 34.777 }, type: 'step' },
-  { id: 2, position: { lat: 32.08, lng: 34.775 }, type: 'bikeBlocking' },
-  { id: 3, position: { lat: 32.075, lng: 34.774 }, type: 'carBlocking' },
-  { id: 4, position: { lat: 32.072, lng: 34.774 }, type: 'narrowSidewalk' },
-  { id: 5, position: { lat: 32.08, lng: 34.774 }, type: 'other' }
-];
+// const hazards = [
+//   {
+//     id: 1,
+//     position: { lat: 32.07, lng: 34.777 },
+//     location: 'address 1',
+//     hazardType: 'step',
+//     updatedDate: '7/5/2022',
+//     isTreated: false
+//   },
+//   {
+//     id: 2,
+//     position: { lat: 32.08, lng: 34.775 },
+//     location: 'address 2',
+//     hazardType: 'bikeBlocking',
+//     updatedDate: '7/5/2022',
+//     isTreated: true
+//   },
+//   {
+//     id: 3,
+//     position: { lat: 32.075, lng: 34.774 },
+//     location: 'address 3',
+//     hazardType: 'carBlocking',
+//     updatedDate: '7/5/2022',
+//     isTreated: true
+//   },
+//   {
+//     id: 4,
+//     position: { lat: 32.072, lng: 34.774 },
+//     location: 'address 4',
+//     hazardType: 'narrowSidewalk',
+//     updatedDate: '7/5/2022',
+//     isTreated: false
+//   },
+//   {
+//     id: 5,
+//     position: { lat: 32.08, lng: 34.774 },
+//     location: 'address 5',
+//     hazardType: 'other',
+//     updatedDate: '7/5/2022',
+//     isTreated: false
+//   }
+// ];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,15 +73,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HomePage = () => {
-  // eslint-disable-next-line no-unused-vars
+  const [hazards, setHazards] = useState(null);
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [startAddress, setStartAddress] = React.useState('');
-  // eslint-disable-next-line no-unused-vars
   const [endAddress, setEndAddress] = React.useState('');
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(qTimeOrder, (snapshot) => {
+      let updatedHazards = [];
+      snapshot.docs.forEach((doc) => {
+        updatedHazards.push({ ...doc.data(), id: doc.id });
+      });
+      console.log(updatedHazards);
+      setHazards(updatedHazards);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [db]);
+
   const updateCurrentLocation = (callback = () => {}) => {
+    window.console.log(hazards);
     navigator.geolocation.getCurrentPosition((pos) => {
       const coords = pos.coords;
       setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });
@@ -95,7 +144,7 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <HazardList />
+              {hazards && <HazardList hazardsList={hazards} />}
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -109,13 +158,14 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
-              <MapWrapper
-                markersList={markersList}
-                // markersList={hazards}
-                directions={directions}
-                currentLocation={currentLocation}
-                updateCurrentLocation={updateCurrentLocation}
-              />
+              {hazards && (
+                <MapWrapper
+                  markersList={hazards}
+                  directions={directions}
+                  currentLocation={currentLocation}
+                  updateCurrentLocation={updateCurrentLocation}
+                />
+              )}
             </Paper>
           </Grid>
         </Grid>

@@ -1,7 +1,15 @@
-// import { db, colRef } from './index';
-// import { addDoc, collection, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { colRef } from '../index';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, colRef } from '../index';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc
+} from 'firebase/firestore';
 
 const addHazard = (hazardType, location, coordinates, moreInfo) => {
   const timestamp = serverTimestamp();
@@ -26,18 +34,14 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
     });
 };
 
-
-const updateHazard = (isTreated) => {
-  window.console.log('isTreated', isTreated);
-  
+const updateHazard = (hazard, isTreated) => {
   const today = new Date();
   const dateUpdated = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
-  
-  const docRef = doc(db, 'hazards', isTreated);
-  const isTrue = isTreated === 'true';
-  
+
+  const docRef = doc(db, 'hazards', hazard.id);
+
   updateDoc(docRef, {
-    treated: isTrue,
+    treated: isTreated,
     updatedAt: serverTimestamp(),
     dateUpdated
   })
@@ -49,18 +53,18 @@ const updateHazard = (isTreated) => {
     });
 };
 
-
 const deleteHazard = (hazard) => {
-  docRef = doc(db, 'hazards', hazard);
+  const docRef = doc(db, 'hazards', hazard.id);
   deleteDoc(docRef).then(() => {
-    deleteHazardForm.reset()});
+    // deleteHazardForm.reset();
+  });
 };
 
 //queries
-// top 10 hazards filtered by updatedAt coloumn
+// top 20 hazards filtered by updatedAt column
 const getHazards = () => {
-  const colRef = collection(db,'hazards')
-  return query(colRef, orderBy('updatedAt', 'desc'), limit(10));
-}
+  const colRef = collection(db, 'hazards');
+  return query(colRef, orderBy('updatedAt', 'desc'), limit(20));
+};
 
 export { addHazard, deleteHazard, updateHazard, getHazards };

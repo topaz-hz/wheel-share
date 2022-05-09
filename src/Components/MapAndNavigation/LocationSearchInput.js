@@ -1,8 +1,12 @@
+// import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import PropTypes from 'prop-types';
+// import { MenuItem, Menu, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 
-const PlacesAutocomplete = ({ setAddress }) => {
+const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) => {
+  // const [anchorEl, setAnchorEl] = useState(null);
   const {
     ready,
     value,
@@ -23,6 +27,7 @@ const PlacesAutocomplete = ({ setAddress }) => {
 
   const handleInput = (e) => {
     // Update the keyword of the input element
+    // setAnchorEl(e.currentTarget);
     setValue(e.target.value);
   };
 
@@ -36,14 +41,18 @@ const PlacesAutocomplete = ({ setAddress }) => {
 
       // Get latitude and longitude via utility functions
       getGeocode({ address: description })
-        .then((results) => getLatLng(results[0]))
+        .then((results) => {
+          setAddress(results[0].formatted_address);
+          return getLatLng(results[0]);
+        })
         .then(({ lat, lng }) => {
           console.log('📍 Coordinates: ', { lat, lng });
-          setAddress({ lat, lng });
+          setGeolocation({ lat, lng });
         })
         .catch((error) => {
           console.log('😱 Error: ', error);
         });
+      // setAnchorEl(null);
     };
 
   const renderSuggestions = () =>
@@ -54,28 +63,52 @@ const PlacesAutocomplete = ({ setAddress }) => {
       } = suggestion;
 
       return (
-        <li key={place_id} onClick={handleSelect(suggestion)}>
-          <strong>{main_text}</strong> <small>{secondary_text}</small>
-        </li>
+        <MenuItem key={place_id} onClick={handleSelect(suggestion)}>
+          <strong>{main_text}</strong>
+          <small>&nbsp;&nbsp;&nbsp;{secondary_text}</small>
+        </MenuItem>
       );
     });
 
   return (
     <div ref={ref}>
-      <input
-        value={value}
+      <TextField
+        autoFocus
+        margin="dense"
+        type="address"
+        fullWidth
         onChange={handleInput}
         disabled={!ready}
-        placeholder="Where are you going?"
+        value={value}
+        label={label}
+        id={customStyle?.id}
+        variant={customStyle?.variant}
       />
-      {/* We can use the "status" to decide whether we should display the dropdown or not */}
-      {status === 'OK' && <ul>{renderSuggestions()}</ul>}
+      {/*<Menu*/}
+      {/*  open={status === 'OK'}*/}
+      {/*  anchorEl={anchorEl}*/}
+      {/*  disableAutoFocus={true}*/}
+      {/*  disableEnforceFocus={true}*/}
+      {/*  anchorOrigin={{*/}
+      {/*    vertical: 'bottom',*/}
+      {/*    horizontal: 'left'*/}
+      {/*  }}*/}
+      {/*  transformOrigin={{*/}
+      {/*    vertical: 'top',*/}
+      {/*    horizontal: 'left'*/}
+      {/*  }}>*/}
+      {/*  TODO: fix list to be popover*/}
+      {status === 'OK' && <ul style={{ padding: '2px 5px' }}>{renderSuggestions()}</ul>}
+      {/*</Menu>*/}
     </div>
   );
 };
 
 PlacesAutocomplete.propTypes = {
-  setAddress: PropTypes.func
+  setAddress: PropTypes.func,
+  setGeolocation: PropTypes.func,
+  label: PropTypes.string,
+  customStyle: PropTypes.object
 };
 
 export default PlacesAutocomplete;
