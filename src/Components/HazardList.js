@@ -21,10 +21,10 @@ const useStyles = makeStyles({
   }
 });
 
-const HazardList = ({ hazardsList }) => {
+const HazardList = ({ hazardsList, setActiveMarker }) => {
   const classes = useStyles();
   const rows = hazardsList;
-
+  //TODO: change to paginated table
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -39,7 +39,7 @@ const HazardList = ({ hazardsList }) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.hazardType}>
+            <TableRow key={row.hazardType} onClick={() => setActiveMarker(row)}>
               <TableCell component="th" scope="row">
                 {HazardUtils.markerText[row.hazardType]}
               </TableCell>
@@ -78,6 +78,7 @@ const HazardList = ({ hazardsList }) => {
 };
 
 HazardList.propTypes = {
-  hazardsList: PropTypes.arrayOf(PropTypes.any)
+  hazardsList: PropTypes.arrayOf(PropTypes.any),
+  setActiveMarker: PropTypes.func
 };
 export default HazardList;

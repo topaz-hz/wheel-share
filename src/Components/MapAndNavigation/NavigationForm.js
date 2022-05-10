@@ -1,13 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-// import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 import React from 'react';
 import PlacesAutocomplete from './LocationSearchInput.js';
-import { GoogleMap } from 'react-google-maps';
-
-// import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,17 +13,31 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// eslint-disable-next-line no-unused-vars
-const NavigationForm = ({
-  setLineCoordinates,
-  setStartAddress,
-  setEndAddress,
-  searchDirections
-}) => {
-  //TODO: use setDirections as follows: if new directions to show on map is \
-  // 'directions_new' call function setDirections(directions_new) \
-  // directions prop will then be updated in mapWrapper component to render on map
+const NavigationForm = ({ setDirections }) => {
   const classes = useStyles();
+
+  const [startAddress, setStartAddress] = React.useState('');
+  const [endAddress, setEndAddress] = React.useState('');
+
+  const searchDirections = () => {
+    console.log(startAddress);
+    console.log(endAddress);
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin: new window.google.maps.LatLng(startAddress),
+        destination: new window.google.maps.LatLng(endAddress),
+        travelMode: window.google.maps.TravelMode.WALKING
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          setDirections(result);
+        } else {
+          console.warn(`error fetching directions ${status}`);
+        }
+      }
+    );
+  };
 
   return (
     <div className={classes.root} style={{ alignItems: 'center' }}>
@@ -73,10 +83,7 @@ const NavigationForm = ({
 };
 
 NavigationForm.propTypes = {
-  setLineCoordinates: PropTypes.func,
-  setStartAddress: PropTypes.func,
-  setEndAddress: PropTypes.func,
-  searchDirections: PropTypes.func
+  setDirections: PropTypes.func
 };
 
 export default NavigationForm;
