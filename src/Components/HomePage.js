@@ -9,49 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Container, CssBaseline, Divider, Grid, Paper } from '@material-ui/core';
 import { onSnapshot } from 'firebase/firestore';
 
-// const hazards = [
-//   {
-//     id: 1,
-//     position: { lat: 32.07, lng: 34.777 },
-//     location: 'address 1',
-//     hazardType: 'step',
-//     updatedDate: '7/5/2022',
-//     isTreated: false
-//   },
-//   {
-//     id: 2,
-//     position: { lat: 32.08, lng: 34.775 },
-//     location: 'address 2',
-//     hazardType: 'bikeBlocking',
-//     updatedDate: '7/5/2022',
-//     isTreated: true
-//   },
-//   {
-//     id: 3,
-//     position: { lat: 32.075, lng: 34.774 },
-//     location: 'address 3',
-//     hazardType: 'carBlocking',
-//     updatedDate: '7/5/2022',
-//     isTreated: true
-//   },
-//   {
-//     id: 4,
-//     position: { lat: 32.072, lng: 34.774 },
-//     location: 'address 4',
-//     hazardType: 'narrowSidewalk',
-//     updatedDate: '7/5/2022',
-//     isTreated: false
-//   },
-//   {
-//     id: 5,
-//     position: { lat: 32.08, lng: 34.774 },
-//     location: 'address 5',
-//     hazardType: 'other',
-//     updatedDate: '7/5/2022',
-//     isTreated: false
-//   }
-// ];
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1
@@ -76,8 +33,7 @@ const HomePage = () => {
   const [hazards, setHazards] = useState(null);
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [startAddress, setStartAddress] = React.useState('');
-  const [endAddress, setEndAddress] = React.useState('');
+  const [activeMarker, setActiveMarker] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(qTimeOrder, (snapshot) => {
@@ -106,26 +62,6 @@ const HomePage = () => {
     updateCurrentLocation();
   }, []);
 
-  const searchDirections = () => {
-    console.log(startAddress);
-    console.log(endAddress);
-    const directionsService = new window.google.maps.DirectionsService();
-    directionsService.route(
-      {
-        origin: new window.google.maps.LatLng(startAddress),
-        destination: new window.google.maps.LatLng(endAddress),
-        travelMode: window.google.maps.TravelMode.DRIVING
-      },
-      (result, status) => {
-        if (status === window.google.maps.DirectionsStatus.OK) {
-          setDirections(result);
-        } else {
-          console.warn(`error fetching directions ${status}`);
-        }
-      }
-    );
-  };
-
   const classes = useStyles();
 
   return (
@@ -144,16 +80,12 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              {hazards && <HazardList hazardsList={hazards} />}
+              {hazards && <HazardList hazardsList={hazards} setActiveMarker={setActiveMarker} />}
             </Paper>
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <NavigationForm
-                setStartAddress={setStartAddress}
-                setEndAddress={setEndAddress}
-                searchDirections={searchDirections}
-              />
+              <NavigationForm setDirections={setDirections} />
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -161,6 +93,8 @@ const HomePage = () => {
               {hazards && (
                 <MapWrapper
                   markersList={hazards}
+                  activeMarker={activeMarker}
+                  setActiveMarker={setActiveMarker}
                   directions={directions}
                   currentLocation={currentLocation}
                   updateCurrentLocation={updateCurrentLocation}
