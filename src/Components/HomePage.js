@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavigationForm from './MapAndNavigation/NavigationForm';
 import MapWrapper from './MapAndNavigation/MapWrapper';
+// import GoogleMap from './MapAndNavigation/GoogleMap';
 import HazardList from './HazardList';
 import HazardForm from './HazardForm';
 import { qTimeOrder, db } from '../index';
@@ -33,6 +34,7 @@ const HomePage = () => {
   const [hazards, setHazards] = useState(null);
   const [directions, setDirections] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [activeMarker, setActiveMarker] = useState(null);
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const HomePage = () => {
   const updateCurrentLocation = (callback = () => {}) => {
     window.console.log(hazards);
     navigator.geolocation.getCurrentPosition((pos) => {
+      // eslint-disable-next-line no-unused-vars
       const coords = pos.coords;
       setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });
     });
@@ -99,6 +102,14 @@ const HomePage = () => {
                   currentLocation={currentLocation}
                   updateCurrentLocation={updateCurrentLocation}
                 />
+                // <GoogleMap
+                //   directions={directions}
+                //   markersList={hazards}
+                //   activeMarker={activeMarker}
+                //   setActiveMarker={setActiveMarker}
+                //   currentLocation={currentLocation}
+                //   updateCurrentLocation={updateCurrentLocation}
+                // />
               )}
             </Paper>
           </Grid>

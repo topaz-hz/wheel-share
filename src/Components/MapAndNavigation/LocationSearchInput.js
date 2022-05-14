@@ -1,12 +1,9 @@
-// import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import useOnclickOutside from 'react-cool-onclickoutside';
 import PropTypes from 'prop-types';
-// import { MenuItem, Menu, TextField } from '@material-ui/core';
 import { MenuItem, TextField } from '@material-ui/core';
 
 const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) => {
-  // const [anchorEl, setAnchorEl] = useState(null);
   const {
     ready,
     value,
@@ -27,7 +24,6 @@ const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) 
 
   const handleInput = (e) => {
     // Update the keyword of the input element
-    // setAnchorEl(e.currentTarget);
     setValue(e.target.value);
   };
 
@@ -52,7 +48,6 @@ const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) 
         .catch((error) => {
           console.log('😱 Error: ', error);
         });
-      // setAnchorEl(null);
     };
 
   const renderSuggestions = () =>
@@ -84,22 +79,20 @@ const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) 
         id={customStyle?.id}
         variant={customStyle?.variant}
       />
-      {/*<Menu*/}
-      {/*  open={status === 'OK'}*/}
-      {/*  anchorEl={anchorEl}*/}
-      {/*  disableAutoFocus={true}*/}
-      {/*  disableEnforceFocus={true}*/}
-      {/*  anchorOrigin={{*/}
-      {/*    vertical: 'bottom',*/}
-      {/*    horizontal: 'left'*/}
-      {/*  }}*/}
-      {/*  transformOrigin={{*/}
-      {/*    vertical: 'top',*/}
-      {/*    horizontal: 'left'*/}
-      {/*  }}>*/}
-      {/*  TODO: fix list to be popover*/}
-      {status === 'OK' && <ul style={{ padding: '2px 5px' }}>{renderSuggestions()}</ul>}
-      {/*</Menu>*/}
+      {status === 'OK' && (
+        <ul
+          style={{
+            padding: '2px 5px',
+            position: 'absolute',
+            width: '600px',
+            marginTop: -15,
+            marginLeft: -5,
+            backgroundColor: 'white',
+            zIndex: 999
+          }}>
+          {renderSuggestions()}
+        </ul>
+      )}
     </div>
   );
 };
