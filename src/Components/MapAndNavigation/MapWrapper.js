@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { InfoWindow, Map, Marker } from 'google-maps-react';
-const {
-  // withScriptjs,
-  // withGoogleMap,
-  // GoogleMap,
-  DirectionsRenderer
-} = require('react-google-maps');
+// import { DirectionsRenderer } from 'react-google-maps';
+// import {
+//   DirectionsRenderer,
+//   GoogleMap,
+//   InfoWindow,
+//   Marker,
+//   withGoogleMap
+// } from 'react-google-maps';
 import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import * as HazardUtils from '../../Utils/hazardUtils';
@@ -27,8 +29,9 @@ const MapWrapper = ({
   const [showInfoWindow, setShowInfoWindow] = useState(false);
 
   useEffect(() => {
+    window.console.log('settings directions');
     directionsRenderer.setDirections(directions);
-    const map = new google.maps.Map(document.getElementById('map'), { zoom: 7 });
+    const map = document.getElementById('map');
     directionsRenderer.setMap(map);
     // directionsRenderer.setPanel(document.getElementById('directionsPanel'));
   }, [directions]);
@@ -38,10 +41,9 @@ const MapWrapper = ({
     setActiveMarker(marker);
   };
 
-  // eslint-disable-next-line no-unused-vars
-  const onInfoWindowOpen = (e) => {
+  const onInfoWindowOpen = () => {
     const container = document.getElementById('infoWindowContent');
-    const root = createRoot(container); // createRoot(container!) if you use TypeScript
+    const root = createRoot(container);
     root.render(<MarkerInfoWindow activeMarker={activeMarker} />);
   };
 
@@ -87,17 +89,19 @@ const MapWrapper = ({
             name={marker.hazardType}
             icon={HazardUtils.getSvgMarker(google, marker.hazardType)}></Marker>
         ))}
-        <InfoWindow
-          visible={showInfoWindow}
-          position={activeMarker?.coordinates}
-          pixelOffset={new google.maps.Size(0, -20)}
-          onOpen={(e) => {
-            onInfoWindowOpen(e);
-          }}>
-          <div id="infoWindowContent" />
-        </InfoWindow>
+        {activeMarker && (
+          <InfoWindow
+            visible={showInfoWindow}
+            position={activeMarker?.coordinates}
+            pixelOffset={new google.maps.Size(0, -20)}
+            onOpen={(e) => {
+              onInfoWindowOpen(e);
+            }}>
+            <div id="infoWindowContent" />
+          </InfoWindow>
+        )}
         {/*  TODO: make sure this is the correct way to render directions on map*/}
-        {!!directions && <DirectionsRenderer directions={directions} />}
+        {/*{!!directions && <DirectionsRenderer directions={directions} />}*/}
         {/*{console.log(directions)}*/}
       </Map>
       <MapLegend />

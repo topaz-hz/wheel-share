@@ -3,28 +3,17 @@ import { Button } from '@material-ui/core';
 import thumbsUp from './thumbsUp.svg';
 import thumbsDown from './thumbsDown.svg';
 import PropTypes from 'prop-types';
-import * as HazardUtils from '../../Utils/hazardUtils';
 import * as dbUtils from '../../Utils/databaseUtils';
 
 const MarkerInfoWindow = ({ activeMarker }) => {
   return (
-    <div id={'infoContent'}>
+    <div id={'infoContent'} style={{ height: 'fit content' }}>
       {activeMarker?.hazardType === 'currentLocation' ? (
         <div>
           <h3>You are here :)</h3>
         </div>
       ) : (
         <div>
-          <p>
-            <strong>Hazard: </strong>
-            {HazardUtils.markerText[activeMarker?.hazardType]}
-          </p>
-          {activeMarker?.info && (
-            <p>
-              <strong>Info: </strong>
-              {activeMarker?.info}
-            </p>
-          )}
           <p>
             <strong>Still There? </strong>
           </p>

@@ -39,7 +39,10 @@ const HazardList = ({ hazardsList, setActiveMarker }) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.hazardType} onClick={() => setActiveMarker(row)}>
+            <TableRow
+              key={row.hazardType}
+              onClick={() => setActiveMarker(row)}
+              style={{ cursor: 'pointer' }}>
               <TableCell component="th" scope="row">
                 {HazardUtils.markerText[row.hazardType]}
               </TableCell>
