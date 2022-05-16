@@ -158,6 +158,7 @@ const GoogleMap = ({
       </Button>
       <div id="container" className="container">
         <div id="map" className="map" />
+        {/*TODO (Topaz): fix sidebar*/}
         <div id="sidebar" className="sidebar" />
         <div id="info" className="" style={{ visibility: showInfoWindow ? 'visible' : 'hidden' }}>
           <MarkerInfoWindow activeMarker={activeMarker} onClose={closeInfoWindow} />
