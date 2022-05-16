@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 
 const HazardList = ({ hazardsList, setActiveMarker }) => {
   const classes = useStyles();
-  const rows = hazardsList;
   //TODO: change to paginated table
   return (
     <TableContainer component={Paper}>
@@ -38,29 +37,34 @@ const HazardList = ({ hazardsList, setActiveMarker }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.hazardType} onClick={() => setActiveMarker(row)}>
+          {hazardsList.map((hazard) => (
+            <TableRow
+              key={hazard.hazardType}
+              //TODO (Topaz): make sure this works
+              onClick={() => setActiveMarker(hazard)}
+              style={{ cursor: 'pointer' }}>
               <TableCell component="th" scope="row">
-                {HazardUtils.markerText[row.hazardType]}
+                {HazardUtils.markerText[hazard.hazardType]}
               </TableCell>
-              <TableCell align="left">{row.location}</TableCell>
-              <TableCell align="center">{row.dateUpdated}</TableCell>
+              <TableCell align="left">{hazard.location}</TableCell>
+              <TableCell align="center">{hazard.dateUpdated}</TableCell>
               <TableCell align="center">
                 <Switch
-                  checked={row.treated}
+                  checked={hazard.treated}
                   onChange={(e) => {
                     e.preventDefault();
-                    dbUtils.updateHazard(row, !row.treated);
+                    dbUtils.updateHazard(hazard, !hazard.treated);
                   }}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               </TableCell>
-              {row.info ? (
+              {hazard.info ? (
                 <TableCell align="center">
-                  <Tooltip title={row.info}>
+                  <Tooltip title={hazard.info}>
                     <img
+                      alt="info icon"
                       src="https://www.svgrepo.com/show/24584/info-icon.svg"
-                      intrinsicsize="512 x 512"
+                      // intrinsicsize="512 x 512"
                       width="20"
                       height="20"
                     />

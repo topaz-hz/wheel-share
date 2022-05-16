@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import NavigationForm from './MapAndNavigation/NavigationForm';
-import MapWrapper from './MapAndNavigation/MapWrapper';
+import GoogleMap from './MapAndNavigation/GoogleMap';
 import HazardList from './HazardList';
 import HazardForm from './HazardForm';
 import { qTimeOrder, db } from '../index';
@@ -91,13 +91,14 @@ const HomePage = () => {
           <Grid item xs={12}>
             <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
               {hazards && (
-                <MapWrapper
+                <GoogleMap
+                  directions={directions}
                   markersList={hazards}
                   activeMarker={activeMarker}
                   setActiveMarker={setActiveMarker}
-                  directions={directions}
                   currentLocation={currentLocation}
                   updateCurrentLocation={updateCurrentLocation}
+                  setDirections={setDirections}
                 />
               )}
             </Paper>
