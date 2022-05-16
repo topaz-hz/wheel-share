@@ -11,7 +11,8 @@ const GoogleMap = ({
   currentLocation,
   activeMarker,
   setActiveMarker,
-  setDirections
+  setDirections,
+  updateCurrentLocation
 }) => {
   const google = window.google;
   const directionsRenderer = new google.maps.DirectionsRenderer();
@@ -20,7 +21,7 @@ const GoogleMap = ({
   const [currDirections, setCurrDirections] = useState(directions);
   const [map, setMap] = useState();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  // const [currPopup, setCurrPopup] = useState(null);
+  const [currPopup, setCurrPopup] = useState(null);
 
   useEffect(() => {
     setMap(
@@ -33,9 +34,7 @@ const GoogleMap = ({
   }, []);
 
   useEffect(() => {
-    if (map) {
-      initMap();
-    }
+    initMap();
   }, [map]);
 
   useEffect(() => initMap, [activeMarker]);
@@ -89,7 +88,7 @@ const GoogleMap = ({
         const divPosition = this.getProjection().fromLatLngToDivPixel(this.position);
         // Hide the popup when it is far out of view.
         const display =
-          Math.abs(divPosition.x) < 1000 && Math.abs(divPosition.y) < 1000 ? 'block' : 'none';
+          Math.abs(divPosition.x) < 10 && Math.abs(divPosition.y) < 10 ? 'block' : 'none';
         if (display === 'block') {
           this.containerDiv.style.left = divPosition.x + 'px';
           this.containerDiv.style.top = divPosition.y + 'px';
@@ -126,6 +125,7 @@ const GoogleMap = ({
         new google.maps.LatLng(marker.coordinates),
         document.getElementById('info')
       );
+      setCurrPopup(popup);
       popup.setMap(map);
     };
 
@@ -139,12 +139,26 @@ const GoogleMap = ({
 
   window.initMap = initMap;
 
+  const closeInfoWindow = () => {
+    currPopup.onRemove();
+    setActiveMarker(null);
+  };
+
   return (
     <>
+      <Button
+        variant="contained"
+        color="default"
+        onClick={() => updateCurrentLocation(setActiveMarker(null))}
+        style={{ marginBottom: 10 }}>
+        Find My Location
+      </Button>
       <div id="container" className="container">
         <div id="map" className="map" />
         <div id="sidebar" className="sidebar" />
-        <div id="info">{showInfoWindow && <MarkerInfoWindow activeMarker={activeMarker} />}</div>
+        <div id="info" className="" style={{ visibility: showInfoWindow ? 'visible' : 'hidden' }}>
+          <MarkerInfoWindow activeMarker={activeMarker} onClose={closeInfoWindow} />
+        </div>
         <div className="floating-panel">
           <Button
             onClick={() => {
