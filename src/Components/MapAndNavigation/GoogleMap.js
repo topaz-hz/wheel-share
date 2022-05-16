@@ -113,6 +113,7 @@ const GoogleMap = ({
     });
 
     if (currentLocation) {
+      //TODO (Topaz): fix this - not drawing for some reason
       new google.maps.Marker({
         position: currentLocation.coordinates,
         map,
@@ -140,6 +141,8 @@ const GoogleMap = ({
   window.initMap = initMap;
 
   const closeInfoWindow = () => {
+    //TODO (Topaz): fix this - can't open another popup after calling this
+    // maybe create list of all popups by id and then call add & remove?
     currPopup.onRemove();
     setActiveMarker(null);
   };
@@ -162,7 +165,7 @@ const GoogleMap = ({
         <div className="floating-panel">
           <Button
             onClick={() => {
-              //TODO: fix this to clear directions
+              //TODO (Sagi): fix this to clear directions
               setDirections(false);
               directionsRenderer.setDirections(false);
             }}>
