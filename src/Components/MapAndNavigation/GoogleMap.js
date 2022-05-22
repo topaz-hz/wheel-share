@@ -11,7 +11,6 @@ const GoogleMap = ({
   currentLocation,
   activeMarker,
   setActiveMarker,
-  setDirections,
   updateCurrentLocation
 }) => {
   const google = window.google;
@@ -166,11 +165,9 @@ const GoogleMap = ({
         <div className="floating-panel">
           <Button
             onClick={() => {
-              //TODO (Sagi): fix this to clear directions
-              setDirections(false);
-              directionsRenderer.setDirections(false);
+              window.location.reload();
             }}>
-            Stop Navigation
+            Restart Navigation
           </Button>
         </div>
       </div>
@@ -183,7 +180,6 @@ GoogleMap.propTypes = {
   activeMarker: PropTypes.any,
   setActiveMarker: PropTypes.func,
   directions: PropTypes.any,
-  setDirections: PropTypes.func,
   currentLocation: PropTypes.any,
   updateCurrentLocation: PropTypes.func
 };
