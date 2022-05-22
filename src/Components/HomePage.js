@@ -50,7 +50,6 @@ const HomePage = () => {
   }, [db]);
 
   const updateCurrentLocation = (callback = () => {}) => {
-    window.console.log(hazards);
     navigator.geolocation.getCurrentPosition((pos) => {
       const coords = pos.coords;
       setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });

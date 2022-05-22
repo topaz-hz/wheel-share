@@ -30,7 +30,7 @@ const NavigationForm = ({ setDirections }) => {
       },
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
-          setDirections(result);
+          setDirections({ ...result });
         } else {
           console.warn(`error fetching directions ${status}`);
         }

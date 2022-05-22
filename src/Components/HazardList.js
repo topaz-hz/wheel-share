@@ -39,9 +39,9 @@ const HazardList = ({ hazardsList, setActiveMarker }) => {
         <TableBody>
           {hazardsList.map((hazard) => (
             <TableRow
-              key={hazard.hazardType}
+              key={hazard.id}
               //TODO (Topaz): make sure this works
-              onClick={() => setActiveMarker(hazard)}
+              onClick={() => setActiveMarker({ ...hazard })}
               style={{ cursor: 'pointer' }}>
               <TableCell component="th" scope="row">
                 {HazardUtils.markerText[hazard.hazardType]}

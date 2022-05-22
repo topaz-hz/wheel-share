@@ -7,6 +7,7 @@ import MarkerInfoWindow from './MarkerInfoWindow';
 
 const GoogleMap = ({
   directions,
+  setDirections,
   markersList,
   currentLocation,
   activeMarker,
@@ -14,15 +15,35 @@ const GoogleMap = ({
   updateCurrentLocation
 }) => {
   const google = window.google;
-  const directionsRenderer = new google.maps.DirectionsRenderer();
+  let directionsRenderer = new google.maps.DirectionsRenderer();
 
-  // eslint-disable-next-line no-unused-vars
-  const [currDirections, setCurrDirections] = useState(directions);
   const [map, setMap] = useState();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [currPopup, setCurrPopup] = useState(null);
 
   useEffect(() => {
+    setGoogleMap();
+  }, []);
+
+  // useEffect(() => {
+  //   initMap();
+  // }, [map]);
+
+  useEffect(() => initMap(), [activeMarker]);
+
+  useEffect(() => {
+    window.console.log('directions', directions);
+    if (directions) {
+      directionsRenderer.setDirections(directions);
+    } else {
+      setGoogleMap();
+    }
+    // initMap();
+  }, [directions]);
+
+  const setGoogleMap = () => {
+    window.console.log('setGoogleMap');
+    directionsRenderer = new google.maps.DirectionsRenderer();
     setMap(
       new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
@@ -30,23 +51,13 @@ const GoogleMap = ({
         disableDefaultUI: true
       })
     );
-  }, []);
-
-  useEffect(() => {
     initMap();
-  }, [map]);
-
-  useEffect(() => initMap, [activeMarker]);
-
-  useEffect(() => {
-    window.console.log('directions', directions);
-    directionsRenderer.setDirections(directions);
-    setCurrDirections(directions);
-    initMap();
-  }, [directions]);
+  };
 
   const initMap = () => {
     if (!map) return;
+
+    // directionsRenderer = new google.maps.DirectionsRenderer();
 
     class Popup extends google.maps.OverlayView {
       position;
@@ -106,17 +117,16 @@ const GoogleMap = ({
         icon: HazardUtils.getSvgMarker(google, marker.hazardType)
       });
       currMarker.addListener('click', () => {
-        setActiveMarker(marker);
+        setActiveMarker({ ...marker });
         createPopup(marker);
       });
     });
 
     if (currentLocation) {
-      //TODO (Topaz): fix this - not drawing for some reason
       new google.maps.Marker({
-        position: currentLocation.coordinates,
+        position: currentLocation,
         map,
-        icon: HazardUtils.getSvgMarker(google, currentLocation.hazardType)
+        icon: HazardUtils.getSvgMarker(google, 'currentLocation')
       });
     }
 
@@ -137,7 +147,7 @@ const GoogleMap = ({
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
   };
 
-  window.initMap = initMap;
+  window.initMap = initMap();
 
   const closeInfoWindow = () => {
     //TODO (Topaz): fix this - can't open another popup after calling this
@@ -151,7 +161,7 @@ const GoogleMap = ({
       <Button
         variant="contained"
         color="default"
-        onClick={() => updateCurrentLocation(setActiveMarker(null))}
+        onClick={() => updateCurrentLocation(setActiveMarker({ coordinates: currentLocation }))}
         style={{ marginBottom: 10 }}>
         Find My Location
       </Button>
@@ -165,7 +175,11 @@ const GoogleMap = ({
         <div className="floating-panel">
           <Button
             onClick={() => {
-              window.location.reload();
+              setDirections(null);
+              setGoogleMap();
+              //TODO: close sidebar
+
+              // window.location.reload();
             }}>
             Restart Navigation
           </Button>
@@ -180,8 +194,16 @@ GoogleMap.propTypes = {
   activeMarker: PropTypes.any,
   setActiveMarker: PropTypes.func,
   directions: PropTypes.any,
+  setDirections: PropTypes.func,
   currentLocation: PropTypes.any,
   updateCurrentLocation: PropTypes.func
 };
+
+// function mapStateToProps(state) {
+//   const { todos } = state;
+//   return { todoList: todos.allIds };
+// }
+
+// export default connect(mapStateToProps)(GoogleMap);
 
 export default GoogleMap;

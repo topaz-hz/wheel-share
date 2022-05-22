@@ -39,7 +39,7 @@
 }
 
 .sidebar {
-    flex: 0 1 auto;
+    /*flex: 0 1 auto;*/
     padding: 0;
 }
 .sidebar > div {
