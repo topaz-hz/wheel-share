@@ -25,11 +25,12 @@ const GoogleMap = ({
     setGoogleMap();
   }, []);
 
-  // useEffect(() => {
-  //   initMap();
-  // }, [map]);
-
-  useEffect(() => initMap(), [activeMarker]);
+  useEffect(() => {
+    window.console.log('setCenter');
+    if (map && activeMarker) {
+      map.setCenter(activeMarker.coordinates);
+    }
+  }, [activeMarker]);
 
   useEffect(() => {
     window.console.log('directions', directions);
@@ -38,7 +39,6 @@ const GoogleMap = ({
     } else {
       setGoogleMap();
     }
-    // initMap();
   }, [directions]);
 
   const setGoogleMap = () => {
