@@ -26,24 +26,18 @@ const GoogleMap = ({
   }, []);
 
   useEffect(() => {
-    window.console.log('setCenter');
     if (map && activeMarker) {
       map.setCenter(activeMarker.coordinates);
     }
   }, [activeMarker]);
 
   useEffect(() => {
-    window.console.log('directions', directions);
     if (directions) {
       directionsRenderer.setDirections(directions);
-    } else {
-      setGoogleMap();
     }
   }, [directions]);
 
   const setGoogleMap = () => {
-    window.console.log('setGoogleMap');
-    directionsRenderer = new google.maps.DirectionsRenderer();
     setMap(
       new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
@@ -51,18 +45,14 @@ const GoogleMap = ({
         disableDefaultUI: true
       })
     );
-    initMap();
   };
 
   const initMap = () => {
     if (!map) return;
 
-    // directionsRenderer = new google.maps.DirectionsRenderer();
-
     class Popup extends google.maps.OverlayView {
       position;
       containerDiv;
-      // eslint-disable-next-line no-unused-vars
       constructor(position, content) {
         super();
         this.position = position;
@@ -156,12 +146,17 @@ const GoogleMap = ({
     setActiveMarker(null);
   };
 
+  const clearDirections = () => {
+    directionsRenderer.setPanel(null);
+    directionsRenderer.setMap(null);
+  };
+
   return (
     <>
       <Button
         variant="contained"
         color="default"
-        onClick={() => updateCurrentLocation(setActiveMarker({ coordinates: currentLocation }))}
+        onClick={() => updateCurrentLocation()}
         style={{ marginBottom: 10 }}>
         Find My Location
       </Button>
@@ -176,10 +171,8 @@ const GoogleMap = ({
           <Button
             onClick={() => {
               setDirections(null);
-              setGoogleMap();
-              //TODO: close sidebar
-
-              // window.location.reload();
+              clearDirections();
+              // setDisplayDirections(false);
             }}>
             Restart Navigation
           </Button>
@@ -198,12 +191,5 @@ GoogleMap.propTypes = {
   currentLocation: PropTypes.any,
   updateCurrentLocation: PropTypes.func
 };
-
-// function mapStateToProps(state) {
-//   const { todos } = state;
-//   return { todoList: todos.allIds };
-// }
-
-// export default connect(mapStateToProps)(GoogleMap);
 
 export default GoogleMap;

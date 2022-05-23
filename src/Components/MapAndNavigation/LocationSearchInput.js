@@ -42,7 +42,6 @@ const PlacesAutocomplete = ({ setAddress, setGeolocation, label, customStyle }) 
           return getLatLng(results[0]);
         })
         .then(({ lat, lng }) => {
-          console.log('📍 Coordinates: ', { lat, lng });
           setGeolocation({ lat, lng });
         })
         .catch((error) => {

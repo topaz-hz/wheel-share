@@ -12,15 +12,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NavigationForm = ({ setDirections }) => {
+const NavigationForm = ({ directions, setDirections }) => {
   const classes = useStyles();
 
   const [startAddress, setStartAddress] = React.useState('');
   const [endAddress, setEndAddress] = React.useState('');
 
   const searchDirections = () => {
-    console.log(startAddress);
-    console.log(endAddress);
     const directionsService = new window.google.maps.DirectionsService();
     directionsService.route(
       {
@@ -71,6 +69,7 @@ const NavigationForm = ({ setDirections }) => {
             variant="contained"
             color="primary"
             component="span"
+            disabled={directions}
             onClick={searchDirections}
             style={{ margin: '30px 0', width: 300 }}>
             Go!
@@ -82,6 +81,7 @@ const NavigationForm = ({ setDirections }) => {
 };
 
 NavigationForm.propTypes = {
+  directions: PropTypes.any,
   setDirections: PropTypes.func
 };
 
