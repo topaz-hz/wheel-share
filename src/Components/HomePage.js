@@ -41,7 +41,6 @@ const HomePage = () => {
       snapshot.docs.forEach((doc) => {
         updatedHazards.push({ ...doc.data(), id: doc.id });
       });
-      console.log(updatedHazards);
       setHazards(updatedHazards);
     });
     return () => {
@@ -49,13 +48,12 @@ const HomePage = () => {
     };
   }, [db]);
 
-  const updateCurrentLocation = (callback = () => {}) => {
-    window.console.log(hazards);
+  const updateCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const coords = pos.coords;
       setCurrentLocation({ lat: coords.latitude, lng: coords.longitude });
+      setActiveMarker({ coordinates: { lat: coords.latitude, lng: coords.longitude } });
     });
-    callback();
   };
 
   useEffect(() => {
@@ -85,11 +83,11 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
-              <NavigationForm setDirections={setDirections} />
+              <NavigationForm directions={directions} setDirections={setDirections} />
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
+            <Paper className={classes.paper} style={{ height: 700, position: 'relative' }}>
               {hazards && (
                 <GoogleMap
                   directions={directions}

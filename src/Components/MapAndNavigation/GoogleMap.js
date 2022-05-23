@@ -4,9 +4,11 @@ import './GoogleMap.css';
 import * as HazardUtils from '../../Utils/hazardUtils';
 import Button from '@material-ui/core/Button';
 import MarkerInfoWindow from './MarkerInfoWindow';
+import MapLegend from './MapLegend';
 
 const GoogleMap = ({
   directions,
+  setDirections,
   markersList,
   currentLocation,
   activeMarker,
@@ -14,15 +16,31 @@ const GoogleMap = ({
   updateCurrentLocation
 }) => {
   const google = window.google;
-  const directionsRenderer = new google.maps.DirectionsRenderer();
+  let directionsRenderer = new google.maps.DirectionsRenderer();
 
-  // eslint-disable-next-line no-unused-vars
-  const [currDirections, setCurrDirections] = useState(directions);
   const [map, setMap] = useState();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [currPopup, setCurrPopup] = useState(null);
+  const [infoDiv, setInfoDiv] = useState(null);
 
   useEffect(() => {
+    setGoogleMap();
+    setInfoDiv(document.getElementById('info'));
+  }, []);
+
+  useEffect(() => {
+    if (map && activeMarker) {
+      map.setCenter(activeMarker.coordinates);
+    }
+  }, [activeMarker]);
+
+  useEffect(() => {
+    if (directions) {
+      directionsRenderer.setDirections(directions);
+    }
+  }, [directions]);
+
+  const setGoogleMap = () => {
     setMap(
       new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
@@ -30,20 +48,7 @@ const GoogleMap = ({
         disableDefaultUI: true
       })
     );
-  }, []);
-
-  useEffect(() => {
-    initMap();
-  }, [map]);
-
-  useEffect(() => initMap, [activeMarker]);
-
-  useEffect(() => {
-    window.console.log('directions', directions);
-    directionsRenderer.setDirections(directions);
-    setCurrDirections(directions);
-    initMap();
-  }, [directions]);
+  };
 
   const initMap = () => {
     if (!map) return;
@@ -51,7 +56,6 @@ const GoogleMap = ({
     class Popup extends google.maps.OverlayView {
       position;
       containerDiv;
-      // eslint-disable-next-line no-unused-vars
       constructor(position, content) {
         super();
         this.position = position;
@@ -106,25 +110,21 @@ const GoogleMap = ({
         icon: HazardUtils.getSvgMarker(google, marker.hazardType)
       });
       currMarker.addListener('click', () => {
-        setActiveMarker(marker);
+        setActiveMarker({ ...marker });
         createPopup(marker);
       });
     });
 
     if (currentLocation) {
-      //TODO (Topaz): fix this - not drawing for some reason
       new google.maps.Marker({
-        position: currentLocation.coordinates,
+        position: currentLocation,
         map,
-        icon: HazardUtils.getSvgMarker(google, currentLocation.hazardType)
+        icon: HazardUtils.getSvgMarker(google, 'currentLocation')
       });
     }
 
     const createPopup = (marker) => {
-      const popup = new Popup(
-        new google.maps.LatLng(marker.coordinates),
-        document.getElementById('info')
-      );
+      const popup = new Popup(new google.maps.LatLng(marker.coordinates), infoDiv);
       setCurrPopup(popup);
       popup.setMap(map);
     };
@@ -137,13 +137,16 @@ const GoogleMap = ({
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
   };
 
-  window.initMap = initMap;
+  window.initMap = initMap();
 
   const closeInfoWindow = () => {
-    //TODO (Topaz): fix this - can't open another popup after calling this
-    // maybe create list of all popups by id and then call add & remove?
-    currPopup.onRemove();
+    currPopup.setMap(null);
     setActiveMarker(null);
+  };
+
+  const clearDirections = () => {
+    directionsRenderer.setPanel(null);
+    directionsRenderer.setMap(null);
   };
 
   return (
@@ -151,7 +154,17 @@ const GoogleMap = ({
       <Button
         variant="contained"
         color="default"
-        onClick={() => updateCurrentLocation(setActiveMarker(null))}
+        onClick={() => {
+          setDirections(null);
+          clearDirections();
+        }}
+        style={{ marginBottom: 10, marginRight: 10 }}>
+        Restart Navigation
+      </Button>
+      <Button
+        variant="contained"
+        color="default"
+        onClick={() => updateCurrentLocation()}
         style={{ marginBottom: 10 }}>
         Find My Location
       </Button>
@@ -159,18 +172,17 @@ const GoogleMap = ({
         <div id="map" className="map" />
         {/*TODO (Topaz): fix sidebar*/}
         <div id="sidebar" className="sidebar" />
-        <div id="info" className="" style={{ visibility: showInfoWindow ? 'visible' : 'hidden' }}>
+        <div
+          id="info"
+          className=""
+          style={{
+            visibility: showInfoWindow ? 'visible' : 'hidden',
+            width: showInfoWindow ? 150 : 0
+          }}>
           <MarkerInfoWindow activeMarker={activeMarker} onClose={closeInfoWindow} />
         </div>
-        <div className="floating-panel">
-          <Button
-            onClick={() => {
-              window.location.reload();
-            }}>
-            Restart Navigation
-          </Button>
-        </div>
       </div>
+      <MapLegend />
     </>
   );
 };
@@ -180,6 +192,7 @@ GoogleMap.propTypes = {
   activeMarker: PropTypes.any,
   setActiveMarker: PropTypes.func,
   directions: PropTypes.any,
+  setDirections: PropTypes.func,
   currentLocation: PropTypes.any,
   updateCurrentLocation: PropTypes.func
 };
