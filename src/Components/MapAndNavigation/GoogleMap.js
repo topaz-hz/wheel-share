@@ -4,6 +4,7 @@ import './GoogleMap.css';
 import * as HazardUtils from '../../Utils/hazardUtils';
 import Button from '@material-ui/core/Button';
 import MarkerInfoWindow from './MarkerInfoWindow';
+import MapLegend from './MapLegend';
 
 const GoogleMap = ({
   directions,
@@ -20,9 +21,11 @@ const GoogleMap = ({
   const [map, setMap] = useState();
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [currPopup, setCurrPopup] = useState(null);
+  const [infoDiv, setInfoDiv] = useState(null);
 
   useEffect(() => {
     setGoogleMap();
+    setInfoDiv(document.getElementById('info'));
   }, []);
 
   useEffect(() => {
@@ -121,10 +124,7 @@ const GoogleMap = ({
     }
 
     const createPopup = (marker) => {
-      const popup = new Popup(
-        new google.maps.LatLng(marker.coordinates),
-        document.getElementById('info')
-      );
+      const popup = new Popup(new google.maps.LatLng(marker.coordinates), infoDiv);
       setCurrPopup(popup);
       popup.setMap(map);
     };
@@ -140,9 +140,7 @@ const GoogleMap = ({
   window.initMap = initMap();
 
   const closeInfoWindow = () => {
-    //TODO (Topaz): fix this - can't open another popup after calling this
-    // maybe create list of all popups by id and then call add & remove?
-    currPopup.onRemove();
+    currPopup.setMap(null);
     setActiveMarker(null);
   };
 
@@ -156,6 +154,16 @@ const GoogleMap = ({
       <Button
         variant="contained"
         color="default"
+        onClick={() => {
+          setDirections(null);
+          clearDirections();
+        }}
+        style={{ marginBottom: 10, marginRight: 10 }}>
+        Restart Navigation
+      </Button>
+      <Button
+        variant="contained"
+        color="default"
         onClick={() => updateCurrentLocation()}
         style={{ marginBottom: 10 }}>
         Find My Location
@@ -164,20 +172,17 @@ const GoogleMap = ({
         <div id="map" className="map" />
         {/*TODO (Topaz): fix sidebar*/}
         <div id="sidebar" className="sidebar" />
-        <div id="info" className="" style={{ visibility: showInfoWindow ? 'visible' : 'hidden' }}>
+        <div
+          id="info"
+          className=""
+          style={{
+            visibility: showInfoWindow ? 'visible' : 'hidden',
+            width: showInfoWindow ? 150 : 0
+          }}>
           <MarkerInfoWindow activeMarker={activeMarker} onClose={closeInfoWindow} />
         </div>
-        <div className="floating-panel">
-          <Button
-            onClick={() => {
-              setDirections(null);
-              clearDirections();
-              // setDisplayDirections(false);
-            }}>
-            Restart Navigation
-          </Button>
-        </div>
       </div>
+      <MapLegend />
     </>
   );
 };

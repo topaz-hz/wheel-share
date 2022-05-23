@@ -15,7 +15,7 @@ const MarkerInfoWindow = ({ activeMarker, onClose }) => {
         size="small"
         style={{ position: 'fixed', top: 0, right: 0 }}>
         <CloseIcon fontSize="inherit" />
-      </IconButton>{' '}
+      </IconButton>
       {activeMarker?.hazardType === 'currentLocation' ? (
         <div>
           <h3>You are here :)</h3>
@@ -31,6 +31,7 @@ const MarkerInfoWindow = ({ activeMarker, onClose }) => {
             onClick={(e) => {
               e.preventDefault();
               dbUtils.updateHazard(activeMarker, false);
+              onClose();
             }}>
             <img src={thumbsUp} />
           </Button>
@@ -40,6 +41,7 @@ const MarkerInfoWindow = ({ activeMarker, onClose }) => {
             onClick={(e) => {
               e.preventDefault();
               dbUtils.updateHazard(activeMarker, true);
+              onClose();
             }}>
             <img src={thumbsDown} />
           </Button>

@@ -41,7 +41,6 @@ const HomePage = () => {
       snapshot.docs.forEach((doc) => {
         updatedHazards.push({ ...doc.data(), id: doc.id });
       });
-      // console.log(updatedHazards);
       setHazards(updatedHazards);
     });
     return () => {
@@ -88,7 +87,7 @@ const HomePage = () => {
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <Paper className={classes.paper} style={{ height: 600, position: 'relative' }}>
+            <Paper className={classes.paper} style={{ height: 700, position: 'relative' }}>
               {hazards && (
                 <GoogleMap
                   directions={directions}
