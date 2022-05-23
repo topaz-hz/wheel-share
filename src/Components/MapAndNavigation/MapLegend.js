@@ -22,7 +22,7 @@ export default function MapLegend() {
         style={{ marginTop: 10, verticalAlign: 'middle', justifyContent: 'space-evenly' }}>
         {MapUtils.markerTypes.map((type, index) => (
           <Item key={index} style={{ width: 170, height: 36 }}>
-            <div style={{ padding: 8 }}>
+            <div>
               <img
                 src={MapUtils.markerURLs[type]}
                 width="20"
