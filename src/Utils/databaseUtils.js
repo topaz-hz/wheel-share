@@ -25,13 +25,9 @@ const addHazard = (hazardType, location, coordinates, moreInfo) => {
     location: location,
     coordinates: coordinates,
     info: moreInfo
-  })
-    .then(() => {
-      alert('Data Successfully Submitted');
-    })
-    .catch((error) => {
-      console.error('Error adding document: ', error);
-    });
+  }).catch((error) => {
+    console.error('Error adding document: ', error);
+  });
 };
 
 const updateHazard = (hazard, isTreated) => {
@@ -44,20 +40,14 @@ const updateHazard = (hazard, isTreated) => {
     treated: isTreated,
     updatedAt: serverTimestamp(),
     dateUpdated
-  })
-    .then(() => {
-      alert('Data Successfully Updated');
-    })
-    .catch((error) => {
-      console.error('Error updating document: ', error);
-    });
+  }).catch((error) => {
+    console.error('Error updating document: ', error);
+  });
 };
 
 const deleteHazard = (hazard) => {
   const docRef = doc(db, 'hazards', hazard.id);
-  deleteDoc(docRef).then(() => {
-    // deleteHazardForm.reset();
-  });
+  deleteDoc(docRef).then(() => {});
 };
 
 //queries
